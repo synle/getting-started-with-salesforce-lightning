@@ -14,3 +14,45 @@
 
 ## Getting started
 - Sign up for a Salesforce Developer Org (SDO) [here](https://developer.salesforce.com/signup)
+
+- Create your component of choice using Developer Console
+
+
+## Ways to make calls to your API ( non Salesforce )
+### Using Apex Controller
+You can use Apex Controller to make call to your API. You need to do the following. Visit this link from Salesforce for [information about making call out from Apex](https://developer.salesforce.com/page/Apex_Web_Services_and_Callouts)
+1. You need to allow Remote Site in Salesforce to allow calls to non-salesforce domain
+2. Below is a snippet of Apex code which can be used to make call out to your app.
+```
+  HttpRequest req = new HttpRequest();
+
+  //Set HTTPRequest Method
+  req.setMethod('PUT');
+
+  //Set HTTPRequest header properties
+  req.setHeader('content-type', 'image/gif');
+  req.setHeader('Content-Length','1024');
+  req.setHeader('Host','s3.amazonaws.com');
+  req.setHeader('Connection','keep-alive');
+  req.setEndpoint( this.serviceEndPoint + this.bucket +'/' + this.key);
+  req.setHeader('Date',getDateString());
+
+  //Set the HTTPRequest body
+  req.setBody(body);
+
+  Http http = new Http();
+
+   try {
+
+        //Execute web service call here
+        HTTPResponse res = http.send(req);
+
+        //Helpful debug messages
+        System.debug(res.toString());
+        System.debug('STATUS:'+res.getStatus());
+        System.debug('STATUS_CODE:'+res.getStatusCode());
+
+} catch(System.CalloutException e) {
+    //Exception handling goes here....
+}
+```
