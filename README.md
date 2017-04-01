@@ -56,3 +56,13 @@ You can use Apex Controller to make call to your API. You need to do the followi
     //Exception handling goes here....
 }
 ```
+
+
+### Making pure Ajax calls (on the client side with Salesforce Lightning)
+You can use either XMLHttpRequest in JS or using the fetch API, whatever that fits your need.
+
+Things you need to enable to make this work.
+1. Allow CORs to your domain: it's a setting in Salesforce
+2. Allow CSPs (Content Security Policy) to your domain: it's a setting in Salesforce.
+3. Make sure your web app has a OPTION method which responded with a proper header for `Access-Control-Allow-Origin`, this also applies to the API call itself (/fetchYourData) has `Access-Control-Allow-Origin`. A header value of `*.force.com` is likely to be enough for your needs.
+4. The code to make the ajax call as usual.
