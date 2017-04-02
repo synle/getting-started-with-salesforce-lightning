@@ -92,3 +92,13 @@ Things you need to enable to make this work.
 2. Allow CSPs (Content Security Policy) to your domain: it's a setting in Salesforce.
 3. Make sure your web app has a OPTION method which responded with a proper header for `Access-Control-Allow-Origin`, this also applies to the API call itself (/fetchYourData) has `Access-Control-Allow-Origin`. A header value of `*.force.com` is likely to be enough for your needs.
 4. The code to make the ajax call as usual.
+
+
+
+### Package and Deploy
+1. Go to Setup > Package Manager
+2. Create a namespace for your app.
+3. Create a bundle
+4. Add required components that makes up your components
+5. Upload it
+6. Distribute the Installation link.
