@@ -57,6 +57,32 @@ You can use Apex Controller to make call to your API. You need to do the followi
 }
 ```
 
+### force cli commands
+```
+force login
+```
+
+```
+force active -a email@gmail.com
+```
+
+```
+force export
+force fetch -t AuraDefinitionBundle
+force fetch -t CorsWhitelistOrigin
+force fetch -t RemoteSiteSetting
+force fetch -t StaticResource
+```
+
+
+```
+force push -r -t AuraDefinitionBundle
+force push -r -t CorsWhitelistOrigin
+force push -r -t RemoteSiteSetting
+force push -r -t StaticResource
+```
+
+
 
 ### Making pure Ajax calls (on the client side with Salesforce Lightning)
 You can use either XMLHttpRequest in JS or using the fetch API, whatever that fits your need.
