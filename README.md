@@ -16,7 +16,7 @@
 - Sign up for a Salesforce Developer Org (SDO) [here](https://developer.salesforce.com/signup)
 
 - Create your component of choice using Developer Console
-
+- Set up a domain for your org, go to My Setup > My Domains, then pick a domain.
 
 ## Ways to make calls to your API ( non Salesforce )
 ### Using Apex Controller
