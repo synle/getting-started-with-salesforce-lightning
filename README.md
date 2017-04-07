@@ -144,22 +144,19 @@ function sendAjaxRequest(method, url, formData, option) {
                 // go here for status codes
                 // https://httpstatuses.com/
                 var responseCode = +this.status;
+                var errorMessage = xhr.responseText || xhr.statusText || xhr.status;
                 if(responseCode >= 200 && responseCode <= 399){
                     // success
                     try{
                         // parse the ajax response...
                         var parseResponse = JSON.parse( xhr.responseText );
-                        if (parseResponse.success) {
-                            resolve( parseResponse );
-                        } else {
-                            reject( parseResponse );
-                        }
+                        resolve( parseResponse );
                     } catch(e){
-                        reject(xhr.responseText);
+                        reject( errorMessage );
                     }
                 } else{
                     // error
-                    reject(xhr.responseText || xhr.statusText || xhr.status);
+                    reject( errorMessage );
                 }
             }
         };
