@@ -132,7 +132,101 @@ Things you need to enable to make this work.
 3. Make sure your web app has a OPTION method which responded with a proper header for `Access-Control-Allow-Origin`, this also applies to the API call itself (/fetchYourData) has `Access-Control-Allow-Origin`. A header value of `*.force.com` is likely to be enough for your needs.
 4. The code to make the ajax call as usual.
 
+#### Sample Ajax calls with XMLHttpRequest
+```
+function sendAjaxRequest(method, url, formData, option) {
+    return new Promise(function(resolve, reject){
+        var xhr = new XMLHttpRequest();
 
+        // on ready params
+        xhr.onreadystatechange = function onreadystatechange() {
+            if (this.readyState === 4) {
+                // go here for status codes
+                // https://httpstatuses.com/
+                var responseCode = +this.status;
+                if(responseCode >= 200 && responseCode <= 399){
+                    // success
+                    try{
+                        // parse the ajax response...
+                        var parseResponse = JSON.parse( xhr.responseText );
+                        if (parseResponse.success) {
+                            resolve( parseResponse );
+                        } else {
+                            reject( parseResponse );
+                        }
+                    } catch(e){
+                        reject(xhr.responseText);
+                    }
+                } else{
+                    // error
+                    reject(xhr.responseText || xhr.statusText || xhr.status);
+                }
+            }
+        };
+
+
+        // prepping get/post data
+        var formDataToSend;
+        if (formData) {
+            switch (method) {
+                case 'GET':
+                    url = url + getEncodedQueryStringByParams(formData);
+                    break;
+                case 'POST':
+                default:
+                    formDataToSend = JSON.stringify(formData);
+                    break;
+            }
+        }
+
+        xhr.withCredentials = true;
+        xhr.open(method, url, true);
+
+        // setting headers
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        xhr.send( formDataToSend );
+    }).catch(function(e){
+        $logger.error('Network Call Failed: ', e)
+        return Promise.reject(e);
+    });
+};
+
+
+// inspired by http://stackoverflow.com/questions/3308846/serialize-object-to-query-string-in-javascript-jquery
+// will return ?key=value...
+function getEncodedQueryStringByParams(json){
+    json = json || {};
+    var jsonKeys = Object.keys(json);
+
+    if (jsonKeys.length === 0) {
+        return '';
+    }
+
+    return '?' +
+        jsonKeys
+            .reduce(function(res, key) {
+                // if is an array (array keys)
+                // key[]=value
+                if(Array.isArray(json[key])){
+                    res = res.concat(
+                        json[key].map(function(val){
+                            return encodeURIComponent(key + '[]') + '=' + encodeURIComponent(val)
+                        })
+                    );
+                } else {
+                    // not an array (single key)
+                    // key=value
+                    res.push(
+                        encodeURIComponent(key) + '=' + encodeURIComponent(json[key])
+                    );
+                }
+
+                return res;
+            }, [])
+            .join('&');
+}
+```
 
 ### Package and Deploy
 1. Go to Setup > Package Manager
