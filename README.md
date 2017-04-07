@@ -58,28 +58,66 @@ You can use Apex Controller to make call to your API. You need to do the followi
 ```
 
 ### force cli commands
+Login with a brand new account
 ```
 force login
 ```
 
+Activate different already logged in profile
 ```
 force active -a email@gmail.com
 ```
 
+
+#### Pull new code from upstream force.com
 ```
-force export
 force fetch -t AuraDefinitionBundle
 force fetch -t CorsWhitelistOrigin
 force fetch -t RemoteSiteSetting
 force fetch -t StaticResource
 ```
 
-
+#### Push code upstream force.com
 ```
 force push -r -t AuraDefinitionBundle
 force push -r -t CorsWhitelistOrigin
 force push -r -t RemoteSiteSetting
 force push -r -t StaticResource
+```
+
+#### Deploy code to new org
+`force import` imports code from meta data folder, this following snippet will allow that
+```
+echo "porting code to new org from cli..."
+rm -rf metadata;
+cp -rf src metadata;
+force import;
+rm -rf metadata;
+```
+
+
+#### Sample Force CLI Package.xml
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>*</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CorsWhitelistOrigin</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>RemoteSiteSetting</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>StaticResource</name>
+    </types>
+    <version>37.0</version>
+</Package>
 ```
 
 
