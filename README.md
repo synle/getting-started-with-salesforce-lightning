@@ -89,10 +89,11 @@ force push -r -t StaticResource
 `force import` imports code from meta data folder, this following snippet will allow that
 ```
 echo "porting code to new org from cli..."
-rm -rf metadata;
-cp -rf src metadata;
+metadataDir=metadata
+rm -rf $metadataDir;
+cp -rf src $metadataDir;
 force import;
-rm -rf metadata;
+rm -rf $metadataDir;
 ```
 
 
