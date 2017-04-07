@@ -184,7 +184,7 @@ function sendAjaxRequest(method, url, formData, option) {
 
         xhr.send( formDataToSend );
     }).catch(function(e){
-        $logger.error('Network Call Failed: ', e)
+        console.error('Network Call Failed: ', e)
         return Promise.reject(e);
     });
 };
