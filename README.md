@@ -141,23 +141,22 @@ function sendAjaxRequest(method, url, formData, option) {
         // on ready params
         xhr.onreadystatechange = function onreadystatechange() {
             if (this.readyState === 4) {
-                // go here for status codes
-                // https://httpstatuses.com/
                 var responseCode = +this.status;
                 var errorMessage = xhr.responseText || xhr.statusText || xhr.status;
-                if(responseCode >= 200 && responseCode <= 399){
+                
+                try{
+                  if(responseCode >= 200 && responseCode <= 399){
                     // success
-                    try{
-                        // parse the ajax response...
-                        var parseResponse = JSON.parse( xhr.responseText );
-                        resolve( parseResponse );
-                    } catch(e){
-                        reject( errorMessage );
-                    }
-                } else{
-                    // error
-                    reject( errorMessage );
-                }
+                    // parse the ajax response...
+                    var parseResponse = JSON.parse( xhr.responseText );
+                    
+                    // early return resolved promise
+                    return resolve( parseResponse );
+                  }
+                } catch(e){}
+
+                // error, all failed, then reject the promise
+                reject( errorMessage );
             }
         };
 
