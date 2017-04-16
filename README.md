@@ -134,7 +134,7 @@ Things you need to enable to make this work.
 
 #### Sample Ajax calls with XMLHttpRequest
 ```
-function sendAjaxRequest(method, url, formData, option) {
+function sendAjaxRequest(method, url, formData, option, isSynchronous) {
     return new Promise(function(resolve, reject){
         var xhr = new XMLHttpRequest();
 
@@ -176,7 +176,7 @@ function sendAjaxRequest(method, url, formData, option) {
         }
 
         xhr.withCredentials = true;
-        xhr.open(method, url, true);
+        xhr.open(method, url, isSynchronous);
 
         // setting headers
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -187,6 +187,33 @@ function sendAjaxRequest(method, url, formData, option) {
         return Promise.reject(e);
     });
 };
+
+
+// send apex action
+function sendApexRequest(cmp, methodName, params){
+    return new Promise(function(resolve, reject){
+        var action = cmp.get(methodName);// methodName is of form "c.getUserSetting"
+
+        if (params) {
+            action.setParams(params);
+        }
+
+        action.setCallback(this, function(response) {
+            switch(response.getState()){
+                case 'SUCCESS':
+                    return resolve(response.getReturnValue());
+                case 'ERROR':
+                    return response.getError(response.getError());
+            }
+        });
+
+        $A.enqueueAction(action);
+    }).catch( function(e){
+        console.error('APEX Call Failed', e);
+    });
+}
+
+
 
 
 // inspired by http://stackoverflow.com/questions/3308846/serialize-object-to-query-string-in-javascript-jquery
@@ -207,7 +234,7 @@ function getEncodedQueryStringByParams(json){
                 if(Array.isArray(json[key])){
                     res = res.concat(
                         json[key].map(function(val){
-                            return encodeURIComponent(key + '[]') + '=' + encodeURIComponent(val)
+                            return encodeURIComponent(key) + '=' + encodeURIComponent(val)
                         })
                     );
                 } else {
