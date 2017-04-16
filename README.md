@@ -306,6 +306,33 @@ function getEncodedQueryStringByParams(json){
 }
 ```
 
+
+### Apex Survival
+#### Aura Friendly Apex Class Properties
+```
+  @AuraEnabled
+  public String userId  { get; protected set; }
+```
+
+#### Custom Settings
+```
+  my__Setting__c.getInstance(instanceName);
+```
+
+#### Unit test
+Unit tests generally are not hooked up, if you need to access SFDC in your tests, attach this annotation `@isTest(SeeAllData=true)`
+```
+public class MyTest {
+  @isTest
+  static void validateHelloWorld() {
+    System.debug('hello world');
+
+    // assertion
+    System.assertEquals(1, 1);
+  }
+}
+```
+
 ### Package and Deploy
 1. Go to Setup > Package Manager
 2. Create a namespace for your app.
