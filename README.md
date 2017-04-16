@@ -284,23 +284,22 @@ function getEncodedQueryStringByParams(json){
     return '?' +
         jsonKeys
             .reduce(function(res, key) {
-                // if is an array (array keys)
-                // key[]=value
+                var dataToProcess = [json[key]];
                 if(Array.isArray(json[key])){
-                    res = res.concat(
-                        json[key].map(function(val){
-                            return encodeURIComponent(key) + '=' + encodeURIComponent(val)
-                        })
-                    );
-                } else {
-                    // not an array (single key)
-                    // key=value
-                    res.push(
-                        encodeURIComponent(key) + '=' + encodeURIComponent(json[key])
-                    );
+                    // if is an array (array keys)
+                    // key[]=value
+                    dataToProcess = json[key];
                 }
 
-                return res;
+                // combine result
+                return res.concat(
+                    dataToProcess.filter(function(val){
+                            return val !== null && val !== undefined;
+                        })
+                        .map(function(val){
+                            return encodeURIComponent(key) + '=' + encodeURIComponent(val)
+                        })
+                );
             }, [])
             .join('&');
 }
