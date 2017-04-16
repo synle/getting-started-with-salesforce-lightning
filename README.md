@@ -24,44 +24,84 @@ You can use Apex Controller to make call to your API. You need to do the followi
 1. You need to allow Remote Site in Salesforce to allow calls to non-salesforce domain
 2. Below is a snippet of Apex code which can be used to make call out to your app.
 ```
-  HttpRequest req = new HttpRequest();
+HttpRequest req = new HttpRequest();
 
-  //Set HTTPRequest Method
-  req.setMethod('PUT');
+//Set HTTPRequest Method
+req.setMethod('PUT');
 
-  //Set HTTPRequest header properties
-  req.setHeader('content-type', 'image/gif');
-  req.setHeader('Content-Length','1024');
-  req.setHeader('Host','s3.amazonaws.com');
-  req.setHeader('Connection','keep-alive');
-  req.setEndpoint( this.serviceEndPoint + this.bucket +'/' + this.key);
-  req.setHeader('Date',getDateString());
+//Set HTTPRequest header properties
+req.setHeader('content-type', 'image/gif');
+req.setHeader('Content-Length','1024');
+req.setHeader('Host','s3.amazonaws.com');
+req.setHeader('Connection','keep-alive');
+req.setEndpoint( this.serviceEndPoint + this.bucket +'/' + this.key);
+req.setHeader('Date',getDateString());
 
-  //Set the HTTPRequest body
-  req.setBody(body);
+//Set the HTTPRequest body
+req.setBody(body);
 
-  Http http = new Http();
+Http http = new Http();
 
-   try {
+try {
+  //Execute web service call here
+  HTTPResponse res = http.send(req);
 
-        //Execute web service call here
-        HTTPResponse res = http.send(req);
-
-        //Helpful debug messages
-        System.debug(res.toString());
-        System.debug('STATUS:'+res.getStatus());
-        System.debug('STATUS_CODE:'+res.getStatusCode());
+  //Helpful debug messages
+  System.debug(res.toString());
+  System.debug('STATUS:'+res.getStatus());
+  System.debug('STATUS_CODE:'+res.getStatusCode());
 
 } catch(System.CalloutException e) {
-    //Exception handling goes here....
+  //Exception handling goes here....
 }
 ```
 
 ### force cli commands
-Login with a brand new account
+#### Login with a brand new account
 ```
-force login
+myHost='login.salesforce.com'
+force login -i=$myHost
+
+myHost='mobile1.t.salesforce.com'
+force login -i=$myHost -u=$myUsername -p=$myPassword
 ```
+
+#### Guided set up script
+```
+if [ ! -f /usr/local/bin/force ]
+then
+  pushd /usr/local/bin
+  sudo curl -O https://s3-us-west-2.amazonaws.com/force-cli/heroku/force/v0.22.67/darwin-amd64/force
+  sudo chmod +x /usr/local/bin/force
+  popd
+  echo 'Please allow force cli access to your organization:'
+  sleep 3
+fi
+
+echo "==="
+
+echo -n "Use Mobile1 Environment (y/n)? "
+read answer
+if echo "$answer" | grep -iq "^y" ;then
+  myHost='mobile1.t.salesforce.com'
+
+  echo 'Salesforce Username:'
+  read myUsername
+
+  echo 'Salesforce Password:'
+  read -s myPassword
+
+  echo "Logging in $myHost as $myUsername"
+
+  force login -i=$myHost -u=$myUsername -p=$myPassword
+
+else
+  echo 'login to public salesforce.com'
+  myHost='login.salesforce.com'
+  force login -i=$myHost
+fi
+```
+
 
 Activate different already logged in profile
 ```
@@ -101,26 +141,45 @@ rm -rf $metadataDir;
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <types>
-        <members>*</members>
-        <name>AuraDefinitionBundle</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>CorsWhitelistOrigin</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>RemoteSiteSetting</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>StaticResource</name>
-    </types>
-    <version>37.0</version>
+  <types>
+    <members>*</members>
+    <name>AuraDefinitionBundle</name>
+  </types>
+  <types>
+    <members>*</members>
+    <name>CorsWhitelistOrigin</name>
+  </types>
+  <types>
+    <members>*</members>
+    <name>RemoteSiteSetting</name>
+  </types>
+  <types>
+    <members>*</members>
+    <name>StaticResource</name>
+  </types>
+  <types>
+    <members>*</members>
+    <name>ApexClass</name>
+  </types>
+  <version>37.0</version>
 </Package>
 ```
+### Sample code to pull/push code using Force CLI
+```
+# to pull
+force fetch -t CorsWhitelistOrigin
+force fetch -t StaticResource
+force fetch -t RemoteSiteSetting
+force fetch -t ApexClass
+force fetch -t AuraDefinitionBundle
 
+# to push
+force push -r -t StaticResource
+force push -r -t RemoteSiteSetting
+force push -r -t CorsWhitelistOrigin
+force push -r -t ApexClass
+force push -r -t AuraDefinitionBundle
+```
 
 
 ### Making pure Ajax calls (on the client side with Salesforce Lightning)
