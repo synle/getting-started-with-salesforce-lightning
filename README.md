@@ -211,6 +211,7 @@ function sendAjaxRequest(method, url, formData, option, isSynchronous) {
                 } catch(e){}
 
                 // error, all failed, then reject the promise
+                var errorMessage = xhr.responseText || xhr.statusText || xhr.status;
                 reject( errorMessage );
             }
         };
