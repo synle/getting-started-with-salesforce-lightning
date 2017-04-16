@@ -306,6 +306,21 @@ function getEncodedQueryStringByParams(json){
 }
 ```
 
+### Notes related to static bundle
+#### Bundling your static resource
+You can use your weapon of choice to bundle your static asset, I used `browserify` cli to achieve my goal, it's working great for me.
+```
+browserify src/index.js -o src/staticresources/MyAppBundle.resource
+```
+
+
+#### Including the bundle in your cmp or app
+```
+<ltng:require scripts="{!$Resource.MyAppBundle}"
+  afterScriptsLoaded="{!c.onInit}" />
+```
+
+
 
 ### Apex Survival
 #### Aura Friendly Apex Class Properties
