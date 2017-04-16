@@ -145,13 +145,9 @@ function sendAjaxRequest(method, url, formData, option, isSynchronous) {
                 var errorMessage = xhr.responseText || xhr.statusText || xhr.status;
                 
                 try{
-                  if(responseCode >= 200 && responseCode <= 399){
+                  if (responseCode >= 200 && responseCode <= 399) {
                     // success
-                    // parse the ajax response...
-                    var parseResponse = JSON.parse( xhr.responseText );
-                    
-                    // early return resolved promise
-                    return resolve( parseResponse );
+                    return resolve( JSON.parse( xhr.responseText ) );
                   }
                 } catch(e){}
 
