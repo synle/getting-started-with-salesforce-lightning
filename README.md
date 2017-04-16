@@ -323,7 +323,7 @@ function getEncodedQueryStringByParams(json){
 Unit tests generally are not hooked up, if you need to access SFDC in your tests, attach this annotation `@isTest(SeeAllData=true)`
 ```
 public class MyTest {
-  @isTest
+  @isTest(SeeAllData=true)
   static void validateHelloWorld() {
     System.debug('hello world');
 
