@@ -374,7 +374,7 @@ createRecord : function (component, event, helper) {
 
 
 #### Routing with e.force:navigateToComponent
-[ref_force_navigateToComponent Doc](https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/ref_force_navigateToComponent.htm)
+[navigateToComponent Doc](https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/ref_force_navigateToComponent.htm)
 ```
 navigateToMyComponent : function(component, event, helper) {
     var evt = $A.get("e.force:navigateToComponent");
@@ -385,5 +385,18 @@ navigateToMyComponent : function(component, event, helper) {
         }
     });
     evt.fire();
+}
+```
+
+
+#### Navigate to Create Object with createRecord
+[createRecord Doc](https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/ref_force_navigateToComponent.htm)
+```
+createRecord : function (component, event, helper) {
+    var createRecordEvent = $A.get("e.force:createRecord");
+    createRecordEvent.setParams({
+        "entityApiName": "Contact"
+    });
+    createRecordEvent.fire();
 }
 ```
