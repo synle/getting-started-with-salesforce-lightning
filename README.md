@@ -165,6 +165,7 @@ rm -rf $metadataDir;
 </Package>
 ```
 ### Sample code to pull/push code using Force CLI
+Please note that at the time of this writing, Force CLI doesn's support CSP (Content Security Policy) Meta Data
 ```
 # to pull
 force fetch -t CorsWhitelistOrigin
@@ -355,3 +356,34 @@ public class MyTest {
 4. Add required components that makes up your components
 5. Upload it
 6. Distribute the Installation link.
+
+
+### Salesforce Lightning Tips and Tricks
+#### Navgiate to SObject given we know the record id.
+[navigateToSObject Doc](https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/ref_force_navigateToSObject.htm)
+```
+createRecord : function (component, event, helper) {
+    var navEvt = $A.get("e.force:navigateToSObject");
+    navEvt.setParams({
+      "recordId": "00QB0000000ybNX",
+      "slideDevName": "related"
+    });
+    navEvt.fire();
+}
+```
+
+
+#### Routing with e.force:navigateToComponent
+[ref_force_navigateToComponent Doc](https://developer.salesforce.com/docs/atlas.en-us.lightning.meta/lightning/ref_force_navigateToComponent.htm)
+```
+navigateToMyComponent : function(component, event, helper) {
+    var evt = $A.get("e.force:navigateToComponent");
+    evt.setParams({
+        componentDef : "c:myComponent",
+        componentAttributes: {
+            contactName : component.get("v.contact.Name")
+        }
+    });
+    evt.fire();
+}
+```
